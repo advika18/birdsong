@@ -10,7 +10,7 @@ st.set_page_config(page_title='Test',layout='wide')
 
 @st.cache()
 def load_data():
-    df = pd.read_csv('/Volumes/BIRDSONG/train.csv')
+    df = pd.read_csv('train.csv')
     return df
 
 
