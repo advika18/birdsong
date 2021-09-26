@@ -80,10 +80,10 @@ def split_into_chunks(spec, fname, step_size=512, bird_name='aldfly'):
     """function to break signal into chunks
 
     Args:
-    spec (np matrix): spectrogram
-    fname (int): file name for identification later
-    step_size (int): len of chunk
-    bird_name (str): which bird is it from the mapping or noise
+      spec (np matrix): spectrogram
+      fname (int): file name for identification later
+      step_size (int): len of chunk
+      bird_name (str): which bird is it from the mapping or noise
 
     Returns numpy split array for X_train, y_train
     """
@@ -93,7 +93,7 @@ def split_into_chunks(spec, fname, step_size=512, bird_name='aldfly'):
     zero_pad_flag = 0
     if num_chunks < w/step_size:
         num_chunks += 1
-    zero_pad_flag = 1
+        zero_pad_flag = 1
 
     # initialize zero arrays
     X_train = np.zeros(shape=(num_chunks, l, step_size))
@@ -112,11 +112,11 @@ def split_into_chunks(spec, fname, step_size=512, bird_name='aldfly'):
         else:
             X_train[i] = spec[:, lower:upper]
 
-    y_train[i] = bird_dict[bird_name]  # for aldfly it is 0, mapping
-    file_name[i] = fname
-    i += 1
-    upper += step_size
-    lower += step_size
+        y_train[i] = bird_dict[bird_name]  # for aldfly it is 0, mapping
+        file_name[i] = fname
+        i += 1
+        upper += step_size
+        lower += step_size
 
     return X_train, y_train, file_name
 
