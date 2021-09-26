@@ -35,9 +35,9 @@ def segment_audio(signal, is_sig=True,sig_thresh=3, noise_thresh=2.5, plot=True)
     row_medians = np.median(mat,axis=1)
 
     if is_sig==True:
-    thresh=sig_thresh
+        thresh=sig_thresh
     else:
-    thresh=noise_thresh
+        thresh=noise_thresh
 
     row_mat = mat >= thresh*row_medians.reshape(-1,1)
     col_mat = mat >= thresh*col_medians.reshape(1,-1)
@@ -48,18 +48,18 @@ def segment_audio(signal, is_sig=True,sig_thresh=3, noise_thresh=2.5, plot=True)
     dilation_filter = ndimage.binary_dilation(erosion_filter, structure=np.ones((4,4))).astype(erosion_filter.dtype)
 
     if plot:
-    fig, (ax1, ax2, ax3) = plt.subplots(3,1)
-    librosa.display.specshow(filter_1, y_axis='linear', ax=ax1)
-    librosa.display.specshow(erosion_filter, y_axis='linear',ax=ax2)
-    librosa.display.specshow(dilation_filter,  y_axis='linear',ax=ax3)
-    plt.show()
+        fig, (ax1, ax2, ax3) = plt.subplots(3,1)
+        librosa.display.specshow(filter_1, y_axis='linear', ax=ax1)
+        librosa.display.specshow(erosion_filter, y_axis='linear',ax=ax2)
+        librosa.display.specshow(dilation_filter,  y_axis='linear',ax=ax3)
+        plt.show()
 
     ##find columns that have more than 1 ones
     temp_filter = np.sum(dilation_filter,axis=0)
     if is_sig==True:
-    column_mask = (temp_filter >= 1).reshape(-1,1)
+        column_mask = (temp_filter >= 1).reshape(-1,1)
     else:
-    column_mask = (temp_filter < 1).reshape(-1,1)
+        column_mask = (temp_filter < 1).reshape(-1,1)
     ##smoothen twice with dilation filter
     column_mask= ndimage.binary_dilation(column_mask, structure=np.ones((4,1))).astype(column_mask.dtype)
     column_mask = ndimage.binary_dilation(column_mask, structure=np.ones((4,1))).astype(column_mask.dtype)
@@ -86,7 +86,7 @@ def split_into_chunks(spec,fname,step_size=512,bird_name='aldfly'):
     ##zero pad the last incomplete chunk if it exists
     zero_pad_flag = 0
     if num_chunks < w/step_size:
-    num_chunks+=1
+        num_chunks+=1
     zero_pad_flag = 1
 
     ##initialize zero arrays
@@ -121,35 +121,35 @@ def create_train_samples(bird_dir):
     i=0
     print(len(bird_files))
     if len(bird_files) > 0:
-    SOUND_DIR=bird_dir+ bird_files[i]
-    fname = int(re.findall(r'\d+', bird_files[i])[0])
+        SOUND_DIR=bird_dir+ bird_files[i]
+        fname = int(re.findall(r'\d+', bird_files[i])[0])
 
-    signal, sr = librosa.load(SOUND_DIR,duration=48000)
-    b_bird, bird_sig = segment_audio(signal,plot=False)
-    b_noise, noise = segment_audio(signal,is_sig=False,plot=False)
-    bird_spec = librosa.amplitude_to_db(np.abs(librosa.stft(bird_sig)), ref=np.max)
-    noise_spec = librosa.amplitude_to_db(np.abs(librosa.stft(noise)), ref=np.max)
-    X,y,f = split_into_chunks(bird_spec,fname=fname,bird_name=bird_dir.split('/')[1])
-    X1,y1,f1 = split_into_chunks(noise_spec,fname=fname,bird_name='noise')
+        signal, sr = librosa.load(SOUND_DIR,duration=48000)
+        b_bird, bird_sig = segment_audio(signal,plot=False)
+        b_noise, noise = segment_audio(signal,is_sig=False,plot=False)
+        bird_spec = librosa.amplitude_to_db(np.abs(librosa.stft(bird_sig)), ref=np.max)
+        noise_spec = librosa.amplitude_to_db(np.abs(librosa.stft(noise)), ref=np.max)
+        X,y,f = split_into_chunks(bird_spec,fname=fname,bird_name=bird_dir.split('/')[1])
+        X1,y1,f1 = split_into_chunks(noise_spec,fname=fname,bird_name='noise')
 
     for i in range(1,len(bird_files)):
-    print(i)
-    SOUND_DIR=bird_dir+ bird_files[i]
-    fname = int(re.findall(r'\d+', bird_files[i])[0])
+        print(i)
+        SOUND_DIR=bird_dir+ bird_files[i]
+        fname = int(re.findall(r'\d+', bird_files[i])[0])
 
-    signal, sr = librosa.load(SOUND_DIR,duration=48000)
-    b_bird, bird_sig = segment_audio(signal,plot=False)
-    b_noise, noise = segment_audio(signal,is_sig=False,plot=False)
-    bird_spec = librosa.amplitude_to_db(np.abs(librosa.stft(bird_sig)), ref=np.max)
-    noise_spec = librosa.amplitude_to_db(np.abs(librosa.stft(noise)), ref=np.max)
-    X_temp,y_temp, f_temp = split_into_chunks(bird_spec,fname,bird_name=bird_dir.split('/')[1])
-    X1_temp,y1_temp, f1_temp = split_into_chunks(noise_spec,fname,bird_name='noise')
-    X= np.concatenate((X,X_temp))
-    X1= np.concatenate((X1,X1_temp))
-    y= np.concatenate((y,y_temp))
-    y1= np.concatenate((y1,y1_temp))
-    f= np.concatenate((f,f_temp))
-    f1= np.concatenate((f1,f1_temp))
+        signal, sr = librosa.load(SOUND_DIR,duration=48000)
+        b_bird, bird_sig = segment_audio(signal,plot=False)
+        b_noise, noise = segment_audio(signal,is_sig=False,plot=False)
+        bird_spec = librosa.amplitude_to_db(np.abs(librosa.stft(bird_sig)), ref=np.max)
+        noise_spec = librosa.amplitude_to_db(np.abs(librosa.stft(noise)), ref=np.max)
+        X_temp,y_temp, f_temp = split_into_chunks(bird_spec,fname,bird_name=bird_dir.split('/')[1])
+        X1_temp,y1_temp, f1_temp = split_into_chunks(noise_spec,fname,bird_name='noise')
+        X= np.concatenate((X,X_temp))
+        X1= np.concatenate((X1,X1_temp))
+        y= np.concatenate((y,y_temp))
+        y1= np.concatenate((y1,y1_temp))
+        f= np.concatenate((f,f_temp))
+        f1= np.concatenate((f1,f1_temp))
 
     return X, y, f, X1, y1, f1
 
