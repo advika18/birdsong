@@ -76,12 +76,13 @@ def segment_audio(signal, is_sig=True, sig_thresh=3, noise_thresh=2.5, plot=True
     return out_bool, out_sig
 
 
-def split_into_chunks(spec, fname, step_size=512, bird_name='aldfly'):
+def split_into_chunks(spec, fname, bird_dict,step_size=512, bird_name='aldfly'):
     """function to break signal into chunks
 
     Args:
     spec (np matrix): spectrogram
     fname (int): file name for identification later
+    bird_dict (dict): dictionary of bird name to integer mapping
     step_size (int): len of chunk
     bird_name (str): which bird is it from the mapping or noise
 
